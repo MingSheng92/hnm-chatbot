@@ -1,5 +1,8 @@
 'use strict';
 
+const ACKNOWLEDGE_NO = 'yes';
+const ACKNOWLEDGE_YES = 'no';
+
 // Imports dependencies and set up http server
 const
   express = require('express'),
@@ -51,17 +54,12 @@ app.post('/webhook', (req, res) => {
         let webhook_event = entry.messaging[0];
         console.log(webhook_event);
       
-      
-        // Get the sender PSID
-        let sender_psid = webhook_event.sender.id;
-        console.log('Sender PSID: ' + sender_psid);
-      
         // Check if the event is a message or postback and
         // pass the event to the appropriate handler function
         if (webhook_event.message) {
-          handleMessage(sender_psid, webhook_event.message);        
+          handleMessage(webhook_event.sender.id, webhook_event.message);        
         } else if (webhook_event.postback) {
-          handlePostback(sender_psid, webhook_event.postback);
+          handlePostback(webhook_event.sender.id, webhook_event.postback);
         }
         
       });
@@ -130,12 +128,12 @@ function handleMessage(sender_psid, received_message) {
                 {
                   "type": "postback",
                   "title": "Yes!",
-                  "payload": "yes",
+                  "payload": ACKNOWLEDGE_YES,
                 },
                 {
                   "type": "postback",
                   "title": "No!",
-                  "payload": "no",
+                  "payload": ACKNOWLEDGE_NO,
                 }
               ],
             }]
@@ -146,6 +144,25 @@ function handleMessage(sender_psid, received_message) {
     
     // Send the response message
     callSendAPI(sender_psid, response);    
+}
+
+function handlePostback(sender_psid, received_postback) {
+  // Get the payload for the postback
+  const payload = received_postback.payload
+
+  // Set the response and udpate db based on the postback payload
+  switch (payload){
+    case ACKNOWLEDGE_YES:
+      response = { "text": "Thanks!" }
+      break;
+    case ACKNOWLEDGE_NO:
+      response = { "text": "Try sending another one!" }
+      break;
+    default:
+      console.log('Cannot differentiate payload type.')
+
+  // Send the message to acknowledge the postback
+  callSendAPI(sender_psid, response);
 }
 
 function callSendAPI(sender_psid, response) {
