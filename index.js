@@ -186,19 +186,6 @@ function handleGreetingPostback(sender_psid){
 function hendleSearchPostBack(sender_psid){
   const askForLocationPayload = {
     "text": " Ok, I have to get to know you a little bit more for this. Where do you live?",
-    "quick_replies":[
-      {
-        "content_type":"text",
-        "title":"Red",
-        "payload":"UNKNOWN",
-        "image_url":"http://example.com/img/red.png"
-      },{
-        "content_type":"text",
-        "title":"UNKNOWN",
-        "payload":"<POSTBACK_PAYLOAD>",
-        "image_url":"http://example.com/img/green.png"
-      }
-    ]
   };
   callSendAPI(sender_psid, askForLocationPayload);
 }
