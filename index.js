@@ -60,7 +60,11 @@ app.post('/webhook', (req, res) => {
         // Check if the event is a message or postback and
         // pass the event to the appropriate handler function
         if (webhook_event.message) {
-          handleMessage(webhook_event.sender.id, webhook_event.message);        
+          if (messagingEvent.message.quick_reply){
+            handlePostback(messagingEvent.sender.id, messagingEvent.message.quick_reply);
+          } else{
+            handleMessage(messagingEvent.sender.id, messagingEvent.message);
+          } 
         } else if (webhook_event.postback) {
           handlePostback(webhook_event.sender.id, webhook_event.postback);
         }
@@ -109,7 +113,7 @@ function handleMessage(sender_psid, received_message) {
   let response;
   console.log('handleMEssage message:', JSON.stringify(received_message));
 
-  const locationAttachment = message && message.attachments && message.attachments.find(a => a.type === 'location');
+  const locationAttachment = received_message && received_message.attachments && received_message.attachments.find(a => a.type === 'location');
   const coordinates = locationAttachment && locationAttachment.payload && locationAttachment.payload.coordinates;
 
   console.log(locationAttachment)
@@ -124,17 +128,17 @@ function handlePostback(sender_psid, received_postback) {
   // Set the response and udpate db based on the postback payload
   switch (payload){
     case GREETING:
-      console.log("Handling Post back event: Hi!")
+      //console.log("Handling Post back event: Hi!")
       //response = { "text": "Thanks!" }
       handleGreetingPostback(sender_psid);
       break;      
     case ACKNOWLEDGE_YES:
-      console.log("Handling Post back event: Get recommendations")
+      //console.log("Handling Post back event: Get recommendations")
       //response = { "text": "Thanks!" }
       hendleSearchPostBack(sender_psid);
       break;
     case ACKNOWLEDGE_NO:
-      console.log("Handling Post back event: Try again!")
+      //console.log("Handling Post back event: Try again!")
       //response = { "text": "Try sending another one!" }
       break;
     default:
