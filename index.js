@@ -160,6 +160,7 @@ function handlePostback(sender_psid, received_postback) {
       break;
     default:
       console.log('Cannot differentiate payload type.')
+  }
 
   // Send the message to acknowledge the postback
   callSendAPI(sender_psid, response);
