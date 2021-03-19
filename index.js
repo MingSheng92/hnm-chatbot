@@ -118,7 +118,7 @@ function handlePostback(sender_psid, received_postback) {
   // Set the response and udpate db based on the postback payload
   switch (payload){
     case GREETING:
-      console.log("Handling Post back event: Thank you!")
+      console.log("Handling Post back event: Hi!")
       //response = { "text": "Thanks!" }
       handleGreetingPostback(sender_psid);
       break;      
@@ -178,7 +178,7 @@ function handleGreetingPostback(sender_psid){
       } else {
         var bodyObj = JSON.parse(body);
         const name = bodyObj.first_name;
-        greeting = "Hi " + name + ". ";
+        greeting = "Hi " + name + ", ";
       }
       const message = greeting + "Would you like to know about all the cool restaurants nearby?";
       const greetingPayload = {
@@ -187,12 +187,12 @@ function handleGreetingPostback(sender_psid){
           {
             "content_type":"text",
             "title":"Yes!",
-            "payload": ACKNOWLEDGE_YES
+            "payload": ACKNOWLEDGE_YES,
           },
           {
             "content_type":"text",
             "title":"No, thanks.",
-            "payload": ACKNOWLEDGE_NO
+            "payload": ACKNOWLEDGE_NO,
           }
         ]
       };
