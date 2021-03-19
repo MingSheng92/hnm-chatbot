@@ -104,6 +104,7 @@ app.get('/webhook', (req, res) => {
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
     let response;
+    console.log("Handling normal message event: ")
     
     // Checks if the message contains text
     if (received_message.text) {    
@@ -127,12 +128,12 @@ function handleMessage(sender_psid, received_message) {
               "buttons": [
                 {
                   "type": "postback",
-                  "title": "Yes!",
+                  "title": "YES",
                   "payload": ACKNOWLEDGE_YES,
                 },
                 {
                   "type": "postback",
-                  "title": "No!",
+                  "title": "NO",
                   "payload": ACKNOWLEDGE_NO,
                 }
               ],
@@ -147,6 +148,7 @@ function handleMessage(sender_psid, received_message) {
 }
 
 function handlePostback(sender_psid, received_postback) {
+  console.log("Handling Post back event: ")
   // Get the payload for the postback
   const payload = received_postback.payload
 
