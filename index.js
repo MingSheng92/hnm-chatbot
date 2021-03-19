@@ -58,7 +58,7 @@ app.post('/webhook', (req, res) => {
         console.log('--------------------------------------------------------------------')
         console.log(webhook_event);
         console.log('--------------------------------------------------------------------')
-        
+
         // Check if the event is a message or postback and
         // pass the event to the appropriate handler function
         if (webhook_event.message) {
@@ -134,12 +134,11 @@ function handlePostback(sender_psid, received_postback) {
       handleGreetingPostback(sender_psid);
       break;      
     case ACKNOWLEDGE_YES:
-      //console.log("Handling Post back event: Get recommendations")
-      //response = { "text": "Thanks!" }
+      console.log("Handling Post back event: Get recommendations")
       hendleSearchPostBack(sender_psid);
       break;
     case ACKNOWLEDGE_NO:
-      //console.log("Handling Post back event: Try again!")
+      console.log("Handling Post back event: Try again!")
       //response = { "text": "Try sending another one!" }
       break;
     default:
@@ -148,30 +147,6 @@ function handlePostback(sender_psid, received_postback) {
 
   // Send the message to acknowledge the postback
   //callSendAPI(sender_psid, response);
-}
-
-function callSendAPI(sender_psid, response) {
-    // Construct the message body
-    let request_body = {
-      "recipient": {
-        "id": sender_psid
-      },
-      "message": response
-    }
-  
-    // Send the HTTP request to the Messenger Platform
-    request({
-      "uri": `${FACEBOOK_GRAPH_API_BASE_URL}me/messages`,
-      "qs": { "access_token": process.env.PAGE_ACCESS_TOKEN },
-      "method": "POST",
-      "json": request_body
-    }, (err, res, body) => {
-      if (!err) {
-        console.log('message sent!')
-      } else {
-        console.error("Unable to send message:" + err);
-      }
-    }); 
 }
 
 function handleGreetingPostback(sender_psid){
@@ -221,4 +196,28 @@ function hendleSearchPostBack(sender_psid){
     ]
   };
   callSendAPI(sender_psid, askForLocationPayload);
+}
+
+function callSendAPI(sender_psid, response) {
+  // Construct the message body
+  let request_body = {
+    "recipient": {
+      "id": sender_psid
+    },
+    "message": response
+  }
+
+  // Send the HTTP request to the Messenger Platform
+  request({
+    "uri": `${FACEBOOK_GRAPH_API_BASE_URL}me/messages`,
+    "qs": { "access_token": process.env.PAGE_ACCESS_TOKEN },
+    "method": "POST",
+    "json": request_body
+  }, (err, res, body) => {
+    if (!err) {
+      console.log('message sent!')
+    } else {
+      console.error("Unable to send message:" + err);
+    }
+  }); 
 }
