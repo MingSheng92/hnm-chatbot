@@ -106,8 +106,14 @@ app.get('/webhook', (req, res) => {
 
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
-    let response;
-    console.log('handleMEssage message:', JSON.stringify(message));
+  let response;
+  console.log('handleMEssage message:', JSON.stringify(received_message));
+
+  const locationAttachment = message && message.attachments && message.attachments.find(a => a.type === 'location');
+  const coordinates = locationAttachment && locationAttachment.payload && locationAttachment.payload.coordinates;
+
+  console.log(locationAttachment)
+  console.log(coordinates)
 }
 
 function handlePostback(sender_psid, received_postback) {
