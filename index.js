@@ -125,6 +125,19 @@ function handleMessage(sender_psid, received_message) {
     //let attachment_url = received_message.attachments[0].payload.url;
     console.log(received_message.attachments[0])
 
+    // check which type of attachment did user sent 
+    switch (received_message.attachments[0].type){
+      case 'location':
+        let location = received_message.attachments[0].payload.coordinates
+        handleLocationData(sender_psid, location)
+        break;      
+      default:
+        console.log('Attachment type not supported.')
+        response = {
+          "text": `The following type is not supported now: ${received_message.attachments[0].type}, only accept location data.`
+        }
+    }
+
     /*
     response = {
       "attachment": {
@@ -220,11 +233,19 @@ function handleGreetingPostback(sender_psid){
     });
 }
 
-function hendleSearchPostBack(sender_psid){
+function hendleSearchPostBack(sender_psid) {
   const askForLocationPayload = {
-    "text": " Ok, I have to get to know you a little bit more for this. Where do you live?",
+    "text": "Ok, I have to get to know you a little bit more for this. Where do you live?",
   };
   callSendAPI(sender_psid, askForLocationPayload);
+}
+
+function handleLocationData(sender_psid, location) {
+  const replyRecommendationPayload = {
+    "text": `Your location data: Latitude -> ${location.lat} , Longtitude -> ${location.long} `,
+  };
+
+  callSendAPI(sender_psid, replyRecommendationPayload);
 }
 
 function callSendAPI(sender_psid, response) {
