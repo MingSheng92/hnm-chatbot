@@ -1,7 +1,7 @@
 'use strict';
 
-const ACKNOWLEDGE_NO = 'yes';
-const ACKNOWLEDGE_YES = 'no';
+const ACKNOWLEDGE_NO = 'no';
+const ACKNOWLEDGE_YES = 'yes';
 
 // Imports dependencies and set up http server
 const
@@ -148,16 +148,17 @@ function handleMessage(sender_psid, received_message) {
 }
 
 function handlePostback(sender_psid, received_postback) {
-  console.log("Handling Post back event: ")
   // Get the payload for the postback
   const payload = received_postback.payload
 
   // Set the response and udpate db based on the postback payload
   switch (payload){
     case ACKNOWLEDGE_YES:
+      console.log("Handling Post back event: Thank you!")
       response = { "text": "Thanks!" }
       break;
     case ACKNOWLEDGE_NO:
+      console.log("Handling Post back event: Try again!")
       response = { "text": "Try sending another one!" }
       break;
     default:
