@@ -129,8 +129,6 @@ function handlePostback(sender_psid, received_postback) {
   // Set the response and udpate db based on the postback payload
   switch (payload){
     case GREETING:
-      //console.log("Handling Post back event: Hi!")
-      //response = { "text": "Thanks!" }
       handleGreetingPostback(sender_psid);
       break;      
     case ACKNOWLEDGE_YES:
@@ -139,7 +137,6 @@ function handlePostback(sender_psid, received_postback) {
       break;
     case ACKNOWLEDGE_NO:
       console.log("Handling Post back event: Try again!")
-      //response = { "text": "Try sending another one!" }
       break;
     default:
       console.log('Cannot differentiate payload type.')
@@ -191,7 +188,15 @@ function hendleSearchPostBack(sender_psid){
     "text": " Ok, I have to get to know you a little bit more for this. Where do you live?",
     "quick_replies":[
       {
-        "content_type":"location"
+        "content_type":"text",
+        "title":"Red",
+        "payload":"UNKNOWN",
+        "image_url":"http://example.com/img/red.png"
+      },{
+        "content_type":"text",
+        "title":"UNKNOWN",
+        "payload":"<POSTBACK_PAYLOAD>",
+        "image_url":"http://example.com/img/green.png"
       }
     ]
   };
