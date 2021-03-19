@@ -55,20 +55,21 @@ app.post('/webhook', (req, res) => {
 
         // Gets the body of the webhook event
         let webhook_event = entry.messaging[0];
+        console.log('--------------------------------------------------------------------')
         console.log(webhook_event);
-      
+        console.log('--------------------------------------------------------------------')
+        
         // Check if the event is a message or postback and
         // pass the event to the appropriate handler function
         if (webhook_event.message) {
-          if (messagingEvent.message.quick_reply){
-            handlePostback(messagingEvent.sender.id, messagingEvent.message.quick_reply);
+          if (webhook_event.message.quick_reply){
+            handlePostback(webhook_event.sender.id, webhook_event.message.quick_reply);
           } else{
-            handleMessage(messagingEvent.sender.id, messagingEvent.message);
+            handleMessage(webhook_event.sender.id, webhook_event.message);
           } 
         } else if (webhook_event.postback) {
           handlePostback(webhook_event.sender.id, webhook_event.postback);
         }
-        
       });
   
       // Returns a '200 OK' response to all requests
@@ -111,13 +112,13 @@ app.get('/webhook', (req, res) => {
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
   let response;
-  console.log('handleMEssage message:', JSON.stringify(received_message));
+  //console.log('handleMEssage message:', JSON.stringify(received_message));
 
-  const locationAttachment = received_message && received_message.attachments && received_message.attachments.find(a => a.type === 'location');
-  const coordinates = locationAttachment && locationAttachment.payload && locationAttachment.payload.coordinates;
+  //const locationAttachment = received_message && received_message.attachments && received_message.attachments.find(a => a.type === 'location');
+  //const coordinates = locationAttachment && locationAttachment.payload && locationAttachment.payload.coordinates;
 
-  console.log(locationAttachment)
-  console.log(coordinates)
+  //console.log(locationAttachment)
+  //console.log(coordinates)
 }
 
 function handlePostback(sender_psid, received_postback) {
