@@ -1,7 +1,10 @@
 'use strict';
 
+const GREETING = 'GREETING';
 const ACKNOWLEDGE_NO = 'no';
 const ACKNOWLEDGE_YES = 'yes';
+
+const FACEBOOK_GRAPH_API_BASE_URL = 'https://graph.facebook.com/v2.6/';
 
 // Imports dependencies and set up http server
 const
@@ -154,20 +157,26 @@ function handlePostback(sender_psid, received_postback) {
 
   // Set the response and udpate db based on the postback payload
   switch (payload){
-    case ACKNOWLEDGE_YES:
+    case GREETING:
       console.log("Handling Post back event: Thank you!")
-      response = { "text": "Thanks!" }
+      //response = { "text": "Thanks!" }
+      handleGreetingPostback(sender_psid);
+      break;      
+    case ACKNOWLEDGE_YES:
+      console.log("Handling Post back event: Get recommendations")
+      //response = { "text": "Thanks!" }
+      hendleSearchPostBack(sender_psid);
       break;
     case ACKNOWLEDGE_NO:
       console.log("Handling Post back event: Try again!")
-      response = { "text": "Try sending another one!" }
+      //response = { "text": "Try sending another one!" }
       break;
     default:
       console.log('Cannot differentiate payload type.')
   }
 
   // Send the message to acknowledge the postback
-  callSendAPI(sender_psid, response);
+  //callSendAPI(sender_psid, response);
 }
 
 function callSendAPI(sender_psid, response) {
@@ -181,7 +190,7 @@ function callSendAPI(sender_psid, response) {
   
     // Send the HTTP request to the Messenger Platform
     request({
-      "uri": "https://graph.facebook.com/v2.6/me/messages",
+      "uri": `${FACEBOOK_GRAPH_API_BASE_URL}me/messages`,
       "qs": { "access_token": process.env.PAGE_ACCESS_TOKEN },
       "method": "POST",
       "json": request_body
@@ -192,4 +201,53 @@ function callSendAPI(sender_psid, response) {
         console.error("Unable to send message:" + err);
       }
     }); 
-  }
+}
+
+function handleGreetingPostback(sender_psid){
+    request({
+      url: `${FACEBOOK_GRAPH_API_BASE_URL}${sender_psid}`,
+      qs: {
+        access_token: process.env.PAGE_ACCESS_TOKEN,
+        fields: "first_name"
+      },
+      method: "GET"
+    }, function(error, response, body) {
+      var greeting = "";
+      if (error) {
+        console.log("Error getting user's name: " +  error);
+      } else {
+        var bodyObj = JSON.parse(body);
+        const name = bodyObj.first_name;
+        greeting = "Hi " + name + ". ";
+      }
+      const message = greeting + "Would you like to know about all the cool restaurants nearby?";
+      const greetingPayload = {
+        "text": message,
+        "quick_replies":[
+          {
+            "content_type":"text",
+            "title":"Yes!",
+            "payload": ACKNOWLEDGE_YES
+          },
+          {
+            "content_type":"text",
+            "title":"No, thanks.",
+            "payload": ACKNOWLEDGE_NO
+          }
+        ]
+      };
+      callSendAPI(sender_psid, greetingPayload);
+    });
+}
+
+function hendleSearchPostBack(sender_psid){
+  const askForLocationPayload = {
+    "text": " Ok, I have to get to know you a little bit more for this. Where do you live?",
+    "quick_replies":[
+      {
+        "content_type":"location"
+      }
+    ]
+  };
+  callSendAPI(sender_psid, askForLocationPayload);
+}
