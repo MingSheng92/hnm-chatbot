@@ -243,9 +243,9 @@ function handleLocationData(sender_psid, location) {
                "template_type":"generic",
                "elements":[
                   {
-                   "title": body.response.venues[0].name,
+                   "title": bodyObj.response.venues[0].name,
                    "image_url":"https://picsum.photos/200",
-                   "subtitle":body.response.venues[0].location.address,
+                   "subtitle":bodyObj.response.venues[0].location.address,
                    "buttons":[
                      {
                        "type":"web_url",
