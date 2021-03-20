@@ -235,6 +235,7 @@ function handleLocationData(sender_psid, location) {
       console.error("Unable to retrieve location from Google API:", err);
     } else {
       const bodyObj = JSON.parse(body);
+      console.log(bodyObj.meta.code)
       if (bodyObj.meta.code === status_OK){
         replyRecommendationPayload = {
           "attachment":{
