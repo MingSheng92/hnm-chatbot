@@ -266,6 +266,7 @@ function handleLocationData(sender_psid, location) {
     }
   })
 
+  console.log(replyRecommendationPayload)
   callSendAPI(sender_psid, replyRecommendationPayload);
 }
 
