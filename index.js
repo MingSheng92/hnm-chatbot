@@ -4,6 +4,7 @@ const GREETING = 'GREETING';
 const ACKNOWLEDGE_NO = 'no';
 const ACKNOWLEDGE_YES = 'yes';
 const VERSION_DATE = "20210320"
+const status_OK = 200
 
 const FACEBOOK_GRAPH_API_BASE_URL = 'https://graph.facebook.com/v2.6/';
 
@@ -229,12 +230,12 @@ function handleLocationData(sender_psid, location) {
     "url": `https://api.foursquare.com/v2/venues/search?ll=${location.lat},${location.long}&categoryId=${catID}&radius=${radius}&v=${VERSION_DATE}&limit=${limit}&client_id=${process.env.FS_CLIENT_ID}&client_secret=${process.env.FS_CLIENT_SECRET}`,
     "method": "GET"
   }, (err, res, body)=>{
-    console.log('after calling geocoding api with result:', body);
+    //console.log('after calling geocoding api with result:', body);
     if (err) {
       console.error("Unable to retrieve location from Google API:", err);
     } else {
       const bodyObj = JSON.parse(body);
-      if (bodyObj.meta.code === 'OK'){
+      if (bodyObj.meta.code === status_OK){
         replyRecommendationPayload = {
           "attachment":{
              "type":"template",
