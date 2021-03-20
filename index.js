@@ -3,6 +3,7 @@
 const GREETING = 'GREETING';
 const ACKNOWLEDGE_NO = 'no';
 const ACKNOWLEDGE_YES = 'yes';
+const VERSION_DATE = "20210320"
 
 const FACEBOOK_GRAPH_API_BASE_URL = 'https://graph.facebook.com/v2.6/';
 
@@ -26,38 +27,14 @@ app.post('/webhook', (req, res) => {
       if (body.entry && body.entry.length <= 0){
         return;
       }
-
-      /*
-      // Iterates over each entry - there may be multiple if batched
-      body.entry.forEach((pageEntry) => {
-        // Iterate over each messaging event and handle accordingly
-        pageEntry.messaging.forEach((messagingEvent) => {
-          console.log({messagingEvent});
-
-          if (messagingEvent.postback) {
-            handlePostback(messagingEvent.sender.id, messagingEvent.postback);
-          } else if (messagingEvent.message) {
-            if (messagingEvent.message.quick_reply){
-              handlePostback(messagingEvent.sender.id, messagingEvent.message.quick_reply);
-            } else{
-              handleMessage(messagingEvent.sender.id, messagingEvent.message);
-            }
-          } else {
-            console.log(
-              'Webhook received unknown messagingEvent: ',
-              messagingEvent
-            );
-          }
-        });
-      });
-      */
+      
       body.entry.forEach(function(entry) {
 
         // Gets the body of the webhook event
         let webhook_event = entry.messaging[0];
-        console.log('--------------------------------------------------------------------')
-        console.log(webhook_event);
-        console.log('--------------------------------------------------------------------')
+        //console.log('--------------------------------------------------------------------')
+        //console.log(webhook_event);
+        //console.log('--------------------------------------------------------------------')
 
         // Check if the event is a message or postback and
         // pass the event to the appropriate handler function
@@ -241,6 +218,22 @@ function hendleSearchPostBack(sender_psid) {
 }
 
 function handleLocationData(sender_psid, location) {
+  const catID = "4d4b7105d754a06374d81259"
+  const radius = "500"
+  const limit = "5"
+  //https://developer.foursquare.com/docs/places-api/getting-started/#create-a-developer-account
+  //instead of using google api, we can try to use foursquare's
+  console.log("calling foursquare API to get nearest restaurent")
+  request({
+    "url": `https://api.foursquare.com/v2/venues/search?ll=${location.lat},${location.long}&categoryId=${catID}&radius=${radius}&v=${VERSION_DATE}&limit=${limit}&client_id=${process.env.FS_CLIENT_ID}&client_secret=${process.env.FS_CLIENT_SECRET}`,
+    "method": "GET"
+  }, (err, res, body)=>{
+    console.log('after calling geocoding api with result:', body);
+    if (err) {
+      console.error("Unable to retrieve location from Google API:", err);
+    }
+  })
+
   const replyRecommendationPayload = {
     "text": `Your location data: Latitude -> ${location.lat} , Longtitude -> ${location.long} `,
   };
