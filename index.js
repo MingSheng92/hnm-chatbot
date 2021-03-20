@@ -235,7 +235,6 @@ function handleLocationData(sender_psid, location) {
       console.error("Unable to retrieve location from Google API:", err);
     } else {
       const bodyObj = JSON.parse(body);
-      console.log(bodyObj.meta.code)
       if (bodyObj.meta.code === status_OK){
         replyRecommendationPayload = {
           "attachment":{
@@ -259,16 +258,16 @@ function handleLocationData(sender_psid, location) {
              }
            }
         };
+
+        callSendAPI(sender_psid, replyRecommendationPayload);
       } else{
         replyRecommendationPayload = {
           "text": 'I am facing some difficulties in getting restaurants data now. Please try again later',
         };
+        callSendAPI(sender_psid, replyRecommendationPayload);
       }
     }
   })
-
-  console.log(replyRecommendationPayload)
-  callSendAPI(sender_psid, replyRecommendationPayload);
 }
 
 function callSendAPI(sender_psid, response) {
