@@ -218,6 +218,7 @@ function hendleSearchPostBack(sender_psid) {
 }
 
 function handleLocationData(sender_psid, location) {
+  let replyRecommendationPayload;
   const catID = "4d4b7105d754a06374d81259"
   const radius = "500"
   const limit = "5"
@@ -231,12 +232,38 @@ function handleLocationData(sender_psid, location) {
     console.log('after calling geocoding api with result:', body);
     if (err) {
       console.error("Unable to retrieve location from Google API:", err);
+    } else {
+      const bodyObj = JSON.parse(body);
+      if (bodyObj.meta.code === 'OK'){
+        replyRecommendationPayload = {
+          "attachment":{
+             "type":"template",
+             "payload":{
+               "template_type":"generic",
+               "elements":[
+                  {
+                   "title": body.response.venues[0].name,
+                   "image_url":"https://picsum.photos/200",
+                   "subtitle":body.response.venues[0].location.address,
+                   "buttons":[
+                     {
+                       "type":"web_url",
+                       "url":"https://donate.wwf.org.au/campaigns/rhinoappeal/",
+                       "title":"Directions"
+                     }
+                   ]
+                 }
+               ]
+             }
+           }
+        };
+      } else{
+        replyRecommendationPayload = {
+          "text": 'I am facing some difficulties in getting restaurants data now. Please try again later',
+        };
+      }
     }
   })
-
-  const replyRecommendationPayload = {
-    "text": `Your location data: Latitude -> ${location.lat} , Longtitude -> ${location.long} `,
-  };
 
   callSendAPI(sender_psid, replyRecommendationPayload);
 }
