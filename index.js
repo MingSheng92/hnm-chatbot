@@ -249,11 +249,59 @@ function handleLocationData(sender_psid, location) {
                    "buttons":[
                      {
                        "type":"web_url",
-                       "url":"https://donate.wwf.org.au/campaigns/rhinoappeal/",
+                       "url":"https://www.google.com.my/maps",
                        "title":"Directions"
                      }
                    ]
-                 }
+                  },
+                  {
+                    "title": bodyObj.response.venues[1].name,
+                    "image_url":"https://picsum.photos/200",
+                    "subtitle":bodyObj.response.venues[1].location.address,
+                    "buttons":[
+                      {
+                        "type":"web_url",
+                        "url":"https://www.google.com.my/maps",
+                        "title":"Directions"
+                      }
+                    ]
+                  },
+                  {
+                    "title": bodyObj.response.venues[2].name,
+                    "image_url":"https://picsum.photos/200",
+                    "subtitle":bodyObj.response.venues[2].location.address,
+                    "buttons":[
+                      {
+                        "type":"web_url",
+                        "url":"https://www.google.com.my/maps",
+                        "title":"Directions"
+                      }
+                    ]
+                  },
+                  {
+                    "title": bodyObj.response.venues[3].name,
+                    "image_url":"https://picsum.photos/200",
+                    "subtitle":bodyObj.response.venues[3].location.address,
+                    "buttons":[
+                      {
+                        "type":"web_url",
+                        "url":"https://www.google.com.my/maps",
+                        "title":"Directions"
+                      }
+                    ]
+                  },
+                  {
+                    "title": bodyObj.response.venues[4].name,
+                    "image_url":"https://picsum.photos/200",
+                    "subtitle":bodyObj.response.venues[4].location.address,
+                    "buttons":[
+                      {
+                        "type":"web_url",
+                        "url":"https://www.google.com.my/maps",
+                        "title":"Directions"
+                      }
+                    ]
+                  }
                ]
              }
            }
